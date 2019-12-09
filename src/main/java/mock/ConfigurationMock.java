@@ -13,6 +13,7 @@ public class ConfigurationMock {
 	
 	public static String server_url;
 	public static Integer client_port;
+	public static Integer freq_send;
 	
 	public ConfigurationMock() {
 		
@@ -22,6 +23,7 @@ public class ConfigurationMock {
 			properties.load(input);
 			server_url = properties.getProperty("server_url");
 			client_port = Integer.parseInt(properties.getProperty("client_port"));
+			freq_send = Integer.parseInt(properties.getProperty("freq_send"));
 		} catch (Exception e) {
 			System.out.println("#Error while loading the config file : " + e.getMessage());
 		}

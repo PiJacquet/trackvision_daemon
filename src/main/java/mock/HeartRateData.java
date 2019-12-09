@@ -4,13 +4,20 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 
-public class Heart_Rate_Data {
-	ConfigurationMock c= new ConfigurationMock();
+public class HeartRateData {
+	
     private double [] myTable= new double[2];
 		
-			public Heart_Rate_Data()
+			public HeartRateData() throws InterruptedException
 			{
+				new ConfigurationMock();
 				
+					while(true) {
+					for (int i=0 ; i<8 ; i++) {
+					normalData();
+					}
+					anormalData();
+					}	
 			}
 			
 			public void normalData() throws InterruptedException 
@@ -25,6 +32,7 @@ public class Heart_Rate_Data {
 					 double random = Math.random() * (max - min) + 60;
 					 double d = (double) Math.round(random * 1) / 1; 
 					System.out.print(dtf.format(now) + "  :   "  + d+"\n");
+					Thread.sleep(ConfigurationMock.heart_Rate_freq_send);
 
 			}
 			public void anormalData() throws InterruptedException
@@ -43,6 +51,7 @@ public class Heart_Rate_Data {
 				   myTable[1]=d2;
 					 double val = myTable[(int)(Math.random()*myTable.length)];
 				   System.err.print(dtf.format(now) + "  :   "   + val+"\n");
+				   Thread.sleep(ConfigurationMock.heart_Rate_freq_send);
 			}
 				
 	}

@@ -8,13 +8,12 @@ import common.JDBCConnectionPool;
 public class ConfigurationMock {
 	
 	public static Boolean startup = true;
-	
 	public static JDBCConnectionPool connectionPool;
 	
 	public static String server_url;
 	public static Integer client_port;
-	public static Integer freq_send;
-	
+	public static Integer heart_Rate_freq_send;
+	public static Integer sugarLevel_freq_send;
 	public ConfigurationMock() {
 		
 		Properties properties=new Properties();
@@ -23,12 +22,13 @@ public class ConfigurationMock {
 			properties.load(input);
 			server_url = properties.getProperty("server_url");
 			client_port = Integer.parseInt(properties.getProperty("client_port"));
-			freq_send = Integer.parseInt(properties.getProperty("freq_send"));
+			heart_Rate_freq_send= Integer.parseInt(properties.getProperty("heart_Rate_freq_send"));
+			sugarLevel_freq_send= Integer.parseInt(properties.getProperty("sugarLevel_freq_send"));
 		} catch (Exception e) {
 			System.out.println("#Error while loading the config file : " + e.getMessage());
 		}
 		
-		connectionPool = new JDBCConnectionPool();
+		//connectionPool = new JDBCConnectionPool();
 	}
 
 }

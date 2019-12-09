@@ -1,0 +1,8 @@
+package common;
+
+public enum MessageType {
+
+	REPORTSMOKE, REPORTTEMPERATURE, REPORTFURNACE, 
+	LISTRESULT, LISTOBJECTS
+}
+ 

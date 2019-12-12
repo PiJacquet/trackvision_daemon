@@ -1,7 +1,6 @@
 package daemon;
 
 import java.io.InputStream;
-import java.net.SocketImpl;
 import java.util.Properties;
 
 import common.JDBCConnectionPool;

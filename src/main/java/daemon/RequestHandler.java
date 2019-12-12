@@ -4,14 +4,16 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-
+import java.util.List;
+import java.util.Vector;
 import common.Message;
 import common.ToolSerialize;
 
 public class RequestHandler implements Runnable{
 
 	protected Socket socket;
-
+    private static List<Object> list1, list2;
+	 
 	public RequestHandler(Socket clientSocket) {
 		this.socket = clientSocket;
 	}
@@ -23,8 +25,9 @@ public class RequestHandler implements Runnable{
 		System.out.println("TrackVision Daemon : Request received > " + requestJSON);
 
 		// Treat it
-		String answer = treatRequest(requestJSON);
-
+		
+			String answer = treatRequest(requestJSON);
+		
 		// Send the answer if necessary
 		if(answer!=null) {
 			System.out.println("TrackVision Daemon : Sending answer > " + answer);
@@ -74,7 +77,9 @@ public class RequestHandler implements Runnable{
 	}
 
 	private String treatRequest(String request) {
+		
 		Message input = ToolSerialize.jsonToMessage(request);
+		
 		switch(input.getType()) {
 		case REPORTFURNACE:
 			break;
@@ -82,11 +87,29 @@ public class RequestHandler implements Runnable{
 			break;
 		case REPORTTEMPERATURE:
 			break;
+		case REPORTHEARTBEAT:
+			
+      list1 = new Vector<Object>();
+	  list1.add(input);
+ 
+      CacheReport.addElements(list1);
+	  CacheReport.browse(input.getType());
+      
+			break;
+		case REPORTSUGARLEVEL:
+			
+			      list2 = new Vector<Object>();
+				  list2.add(input);
+				  
+			      CacheReport.addElements(list2);
+				  CacheReport.browse(input.getType());
+			break;
 		default:
 			break;
 
 		}
 		return null;
+		
 	}
 }
 

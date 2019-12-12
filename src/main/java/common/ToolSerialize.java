@@ -23,6 +23,13 @@ public class ToolSerialize {
 			if(map.get("type").toString().equalsIgnoreCase(MessageType.REPORTTEMPERATURE.toString())) {
 				return mapper.readValue(json, MsgReportTemperature.class); 
 			}
+			if(map.get("type").toString().equalsIgnoreCase(MessageType.REPORTHEARTBEAT.toString()) ) {
+				return mapper.readValue(json, MsgReportHeartBeat.class); 
+			}
+			if(map.get("type").toString().equalsIgnoreCase(MessageType.REPORTSUGARLEVEL.toString()) ) {
+				return mapper.readValue(json, MsgReportSugarLevel.class); 
+				
+			}
 			
 			// Don't forget messages without a specific class!
 			return mapper.readValue(json, Message.class);
@@ -30,10 +37,13 @@ public class ToolSerialize {
 		catch (JsonParseException e) {e.printStackTrace();} 
 		catch (JsonMappingException e) {e.printStackTrace();}
 		catch (IOException e) {e.printStackTrace();}
+		
 		return null;
+		
 	}
 	
 	public static String messageToJSON(Message object) {
+		
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonString = "";
 		try {
@@ -42,6 +52,7 @@ public class ToolSerialize {
 		catch (JsonParseException e) { e.printStackTrace();}
 		catch (JsonMappingException e) {e.printStackTrace();}
 		catch (IOException e) { e.printStackTrace(); }
+
 		return jsonString;
 	}
 	

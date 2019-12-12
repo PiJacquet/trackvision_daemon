@@ -7,7 +7,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import common.ToolSerialize;
 
 public class Connector {
 	
@@ -16,7 +15,11 @@ public class Connector {
 		// Get the local address
 		InetAddress address = null;
 		try {
-			address = InetAddress.getByName(ConfigurationMock.server_url);
+			
+			//address = InetAddress.getByName(ConfigurationMock.server_url);
+			address = InetAddress.getLocalHost();
+			
+
 		} catch (UnknownHostException e1) {
 			e1.printStackTrace();
 		}
@@ -29,9 +32,11 @@ public class Connector {
 		try {
 			socket=new Socket(address, ConfigurationMock.client_port);
 			// We send the request
+
 			requestServer= new DataOutputStream(socket.getOutputStream());
 			requestServer.writeUTF(request);
 			requestServer.flush();
+
 			// We get the answer 
 			rawAnswerServer= new DataInputStream(socket.getInputStream());
 			answerServer = rawAnswerServer.readUTF();

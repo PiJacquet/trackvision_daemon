@@ -2,51 +2,61 @@ package mock;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import common.MsgReportSugarLevel;
+import common.ToolSerialize;
 
 public class BloodSugarLevelData {
 	
-    private double [] myTable= new double[2];
+    private float[] myTable= new float[2];
     
     public BloodSugarLevelData() throws InterruptedException {
-    	 new ConfigurationMock();
-    		while(true) {
-    			for(int v =0 ; v<2; v++) {
-    			normalData2();
-    			}
-    			anormalData2(); 
-    		}
+    
+    	System.out.println("TrackVision Mock :  launched!\n");
+   	        new ConfigurationMock();
+   		while(true) {
+   			for(int v =0 ; v<2; v++) {
+   			normalData2();
+   			}
+   			anormalData2(); 
+   		}
     }
+    
     public void normalData2() throws InterruptedException 
 	{
-		     double min =0.5 ;
-		     double max = 1.26;
+    	        float min =(float)0.5 ;
+    	       float max = (float)1.26;
      
         	
-        	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+        	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
             LocalDateTime now = LocalDateTime.now();  
         	   
-			 double random = Math.random() * (max - min) + 0.5;
-			 double d = (double) Math.round(random * 100) / 100; 
-			System.out.print(dtf.format(now) + "  :   "  + d+"\n");
+			 float random = (float) (Math.random() * (max - min) + 0.5);
+			 float d = (float) Math.round(random * 100) / 100; 
+			 System.out.println(dtf.format(now) + "  :   "  + d);
+			 MsgReportSugarLevel request = new MsgReportSugarLevel(dtf.format(now), d);
+			 Connector.contactServer(ToolSerialize.messageToJSON(request));
+			
 			Thread.sleep(ConfigurationMock.sugarLevel_freq_send);
 
 	}
 	public void anormalData2() throws InterruptedException
 	{
-		     double min1 = 0.3;
-		     double max1 = 0.5;
-		     double min2 = 1.26;
-	         double max2= 2;
-		   DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+		float min1 =(float) 0.3;
+		float max1 = (float)0.5;
+		float min2 = (float)1.26;
+		float max2= (float)2;
+		   DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
  	       LocalDateTime now = LocalDateTime.now(); 
-		     double random1 = (Math.random() * (max1 - min1) + 0.3) ;
-		     double random2 = (double)(Math.random() * (max2 - min2) + 1.26) ;
-			 double d1 = (double) Math.round(random1 * 100) / 100; 
-			 double d2 = (double) Math.round(random2 * 100) / 100;
+		     float random1 = (float) (Math.random() * (max1 - min1) + 0.3) ;
+		     float random2 = (float)(Math.random() * (max2 - min2) + 1.26) ;
+			 float d1 = (float) Math.round(random1 * 100) / 100; 
+			 float d2 = (float) Math.round(random2 * 100) / 100;
 		   myTable[0]= d1;
 		   myTable[1]=d2;
-			 double val = myTable[(int)(Math.random()*myTable.length)];
-		   System.err.print(dtf.format(now) + "  :   "   + val+"\n");
+			 float val = myTable[(int)(Math.random()*myTable.length)];
+			 MsgReportSugarLevel request = new MsgReportSugarLevel(dtf.format(now), val);
+			 Connector.contactServer(ToolSerialize.messageToJSON(request));
+		   System.err.println(dtf.format(now) + "  :   "   + val);
 		   Thread.sleep(ConfigurationMock.sugarLevel_freq_send);
 	}
     

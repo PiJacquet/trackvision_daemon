@@ -28,9 +28,12 @@ public class Mocker {
 
 		System.out.println("################### Initialisation ##################");
 		//We get a list of current sensors
+		
 		Message requestCaptorsList = new Message(MessageType.LISTOBJECTS);
 		String answerCaptors = Connector.contactServer(ToolSerialize.messageToJSON(requestCaptorsList));
+		System.out.println("je suis la1 ");
 		List<List<String>> listObjects = ((MsgListResult) ToolSerialize.jsonToMessage(answerCaptors)).getListResult();
+		System.out.println("je suis la ");
 		System.out.println("The sensors list was loaded from the server!");
 
 		//We aggregate objects by their referentiel types

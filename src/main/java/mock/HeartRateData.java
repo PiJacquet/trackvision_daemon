@@ -6,20 +6,31 @@ import common.MsgReportHeartBeat;
 import common.ToolSerialize;
 
 
-public class HeartRateData {
+public class HeartRateData implements Runnable {
 	
     private float [] myTable= new float[2];
-		
-			public HeartRateData() throws InterruptedException {
 			
-				System.out.println("TrackVision Mock :  launched!\n");
+			public void run() {
+				System.out.println("TrackVision Mock HeartRate :  launched!\n");
 				new ConfigurationMock();
 				
 					while(true) {
 					for (int i=0 ; i<8 ; i++) {
+						try {
 					normalData();
+					Thread.sleep(ConfigurationMock.heart_Rate_freq_send);
+						}
+						catch (InterruptedException e) {
+							
+						}
 					}
+					try {
 					anormalData();
+					Thread.sleep(ConfigurationMock.heart_Rate_freq_send);
+					}
+					catch (InterruptedException e) {
+						
+					}
 			}
 				
 			}
@@ -36,8 +47,8 @@ public class HeartRateData {
 					 float d = (float) Math.round(random * 1) / 1; 
 					 MsgReportHeartBeat request = new MsgReportHeartBeat(dtf.format(now), d);
 					    Connector.contactServer(ToolSerialize.messageToJSON(request));
-					System.out.print(dtf.format(now) + "  :   "  + d);
-					Thread.sleep(ConfigurationMock.heart_Rate_freq_send);
+					System.out.print(dtf.format(now) + "  :   "  + d+"\n");
+				
 
 			}
 			public void anormalData() throws InterruptedException
@@ -57,8 +68,8 @@ public class HeartRateData {
 					 float val = myTable[(int)(Math.random()*myTable.length)];
 					 MsgReportHeartBeat request = new MsgReportHeartBeat(dtf.format(now), val);
 					    Connector.contactServer(ToolSerialize.messageToJSON(request));
-				   System.err.print(dtf.format(now) + "  :   "   + val);
-				   Thread.sleep(ConfigurationMock.heart_Rate_freq_send);
+				   System.err.print(dtf.format(now) + "  :   "   + val+"\n");
+				  
 			}
 			
 				

@@ -5,21 +5,36 @@ import java.time.format.DateTimeFormatter;
 import common.MsgReportSugarLevel;
 import common.ToolSerialize;
 
-public class BloodSugarLevelData {
+public class BloodSugarLevelData implements Runnable {
 	
     private float[] myTable= new float[2];
+
     
-    public BloodSugarLevelData() throws InterruptedException {
+
+    public void run() {
+    	System.out.println("TrackVision Mock SugarLevel :  launched!\n");
+	        new ConfigurationMock();
+		while(true) {
+			for(int v =0 ; v<2; v++) {
+				try {
+					normalData2();
+					Thread.sleep(ConfigurationMock.sugarLevel_freq_send);
+					
+						}
+						catch (InterruptedException e) {
+							
+						}
+					}
+					try {
+					anormalData2();
+					Thread.sleep(ConfigurationMock.sugarLevel_freq_send);
+					}
+					catch (InterruptedException e) {
+					}
+		}
+					
+}
     
-    	System.out.println("TrackVision Mock :  launched!\n");
-   	        new ConfigurationMock();
-   		while(true) {
-   			for(int v =0 ; v<2; v++) {
-   			normalData2();
-   			}
-   			anormalData2(); 
-   		}
-    }
     
     public void normalData2() throws InterruptedException 
 	{
@@ -32,11 +47,9 @@ public class BloodSugarLevelData {
         	   
 			 float random = (float) (Math.random() * (max - min) + 0.5);
 			 float d = (float) Math.round(random * 100) / 100; 
-			 System.out.println(dtf.format(now) + "  :   "  + d);
+			 System.out.println(dtf.format(now) + "  :   "  + d+"\n");
 			 MsgReportSugarLevel request = new MsgReportSugarLevel(dtf.format(now), d);
 			 Connector.contactServer(ToolSerialize.messageToJSON(request));
-			
-			Thread.sleep(ConfigurationMock.sugarLevel_freq_send);
 
 	}
 	public void anormalData2() throws InterruptedException
@@ -56,8 +69,8 @@ public class BloodSugarLevelData {
 			 float val = myTable[(int)(Math.random()*myTable.length)];
 			 MsgReportSugarLevel request = new MsgReportSugarLevel(dtf.format(now), val);
 			 Connector.contactServer(ToolSerialize.messageToJSON(request));
-		   System.err.println(dtf.format(now) + "  :   "   + val);
-		   Thread.sleep(ConfigurationMock.sugarLevel_freq_send);
+		   System.err.println(dtf.format(now) + "  :   "   + val+"\n");
+
 	}
     
     

@@ -93,7 +93,7 @@ public class RequestHandler implements Runnable{
 	  list1.add(input);
  
       CacheReport.addElements(list1);
-	  CacheReport.browse(input.getType());
+	//  CacheReport.browse(input.getType());
       
 			break;
 		case REPORTSUGARLEVEL:
@@ -102,7 +102,7 @@ public class RequestHandler implements Runnable{
 				  list2.add(input);
 				  
 			      CacheReport.addElements(list2);
-				  CacheReport.browse(input.getType());
+				//  CacheReport.browse(input.getType());
 			break;
 		default:
 			break;

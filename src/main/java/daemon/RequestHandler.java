@@ -5,7 +5,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import common.Message;
+import common.MsgReportHeartBeat;
+import common.MsgReportSugarLevel;
 import common.ToolSerialize;
+import daemon.business.MedicalDetective;
 
 public class RequestHandler implements Runnable{
 
@@ -21,8 +24,7 @@ public class RequestHandler implements Runnable{
 		System.out.println("TrackVision Daemon : Request received > " + requestJSON);
 
 		// Treat it
-		
-			String answer = treatRequest(requestJSON);
+		String answer = treatRequest(requestJSON);
 		
 		// Send the answer if necessary
 		if(answer!=null) {
@@ -75,14 +77,14 @@ public class RequestHandler implements Runnable{
 	private String treatRequest(String request) {
 		
 		Message input = ToolSerialize.jsonToMessage(request);
-		try {
-			CacheReport.browse(input);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		switch(input.getType()) {
+		case REPORTHEARTBEAT:
+			MedicalDetective.heartBeatDetection((MsgReportHeartBeat)input);
+			break;
+		case REPORTSUGARLEVEL:
+			MedicalDetective.sugarLevelDetection((MsgReportSugarLevel)input);
+			break;
 		case REPORTFURNACE:
 			break;
 		case REPORTSMOKE:
@@ -90,6 +92,8 @@ public class RequestHandler implements Runnable{
 		case REPORTTEMPERATURE:
 			break;
 		default:
+			break;
+		case LISTOBJECTS:
 			break;
 
 		}

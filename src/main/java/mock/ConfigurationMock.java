@@ -28,7 +28,7 @@ public class ConfigurationMock {
 			System.out.println("#Error while loading the config file : " + e.getMessage());
 		}
 		
-		//connectionPool = new JDBCConnectionPool();
+
 	}
 
 }

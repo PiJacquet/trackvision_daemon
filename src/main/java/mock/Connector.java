@@ -15,8 +15,7 @@ public class Connector {
 		// Get the server addess
 		InetAddress address = null;
 		try {
-			//address = InetAddress.getByName(ConfigurationMock.server_url);
-			address = InetAddress.getLocalHost();
+			address = InetAddress.getByName(ConfigurationMock.server_url);
 		} catch (UnknownHostException e1) {
 			e1.printStackTrace();
 		}
@@ -28,7 +27,7 @@ public class Connector {
 
 		try {
 			
-			socket=new Socket(address, ConfigurationMock.client_port);
+			socket=new Socket(address, ConfigurationMock.server_port);
 			
 			// We send the request
 

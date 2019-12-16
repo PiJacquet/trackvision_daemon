@@ -11,7 +11,7 @@ public class ConfigurationMock {
 	public static JDBCConnectionPool connectionPool;
 	
 	public static String server_url;
-	public static Integer client_port;
+	public static Integer server_port;
 	public static Integer heart_Rate_freq_send;
 	public static Integer sugarLevel_freq_send;
 	public ConfigurationMock() {
@@ -21,7 +21,7 @@ public class ConfigurationMock {
 			InputStream input = getClass().getClassLoader().getResourceAsStream("configMock.properties");
 			properties.load(input);
 			server_url = properties.getProperty("server_url");
-			client_port = Integer.parseInt(properties.getProperty("client_port"));
+			server_port = Integer.parseInt(properties.getProperty("client_port"));
 			heart_Rate_freq_send= Integer.parseInt(properties.getProperty("heart_Rate_freq_send"));
 			sugarLevel_freq_send= Integer.parseInt(properties.getProperty("sugarLevel_freq_send"));
 		} catch (Exception e) {

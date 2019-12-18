@@ -3,6 +3,8 @@ package daemon;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+import daemon.business.suspectBehavior.SchedulerDetective;
+
 public class DeamonLaunch {
 
 	public static void main(String args[]) throws IOException {
@@ -13,7 +15,7 @@ public class DeamonLaunch {
 		new ConfigurationDaemon();
 		final ServerSocket serverSocket = new ServerSocket(ConfigurationDaemon.server_port);
 		
-		new Thread(new CacheReport()).start();
+		new Thread(new SchedulerDetective()).start();
 		
 		// Define the closing process of the server application (by closing the port and avoiding any blocked port issue at the next launch)
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {

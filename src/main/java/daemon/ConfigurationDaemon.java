@@ -16,6 +16,7 @@ public class ConfigurationDaemon {
 	public static String db_user;
 	public static String db_pwd;
 	public static Integer server_port;
+	public static CacheReport cache;
 	
 	public ConfigurationDaemon() {
 		
@@ -32,6 +33,7 @@ public class ConfigurationDaemon {
 			System.out.println("#Error while loading the config file : " + e.getMessage());
 		}
 		
+		cache = new CacheReport();
 		connectionPool = new JDBCConnectionPool();
 	}
 

@@ -28,9 +28,10 @@ public class ToolSerialize {
 			}
 			if(map.get("type").toString().equalsIgnoreCase(MessageType.REPORTSUGARLEVEL.toString()) ) {
 				return mapper.readValue(json, MsgReportSugarLevel.class); 
-				
 			}
-			
+			if(map.get("type").toString().equalsIgnoreCase(MessageType.LISTRESULT.toString())){
+				return mapper.readValue(json, MsgListResult.class);
+			}
 			// Don't forget messages without a specific class!
 			return mapper.readValue(json, Message.class);
 		} 

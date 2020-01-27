@@ -27,12 +27,18 @@ public class Mocker {
 		sc = new Scanner(System.in);
 
 		System.out.println("################### Initialisation ##################");
-		//We get a list of current sensors
-		
+		//We get a list of current objects
+
+		//We get the referentiel of objects
+		Message requestReferentielList = new Message(MessageType.LISTREFERENTIELS);
+		String answerReferentiel = Connector.contactServer(ToolSerialize.messageToJSON(requestReferentielList));
+		listReferentiels = ((MsgListResult) ToolSerialize.jsonToMessage(answerReferentiel)).getListResult();
+		System.out.println("The referential type list was loaded from the server!");
+
 		Message requestCaptorsList = new Message(MessageType.LISTOBJECTS);
 		String answerCaptors = Connector.contactServer(ToolSerialize.messageToJSON(requestCaptorsList));
 		List<List<String>> listObjects = ((MsgListResult) ToolSerialize.jsonToMessage(answerCaptors)).getListResult();
-		System.out.println("The sensors list was loaded from the server!");
+		System.out.println("The objects list was loaded from the server!");
 
 		//We aggregate objects by their referentiel types
 		sortedCaptors = new ArrayList<List<String>>();
@@ -40,27 +46,25 @@ public class Mocker {
 		for(int i=0; i<listReferentiels.size();i++)
 			sortedCaptors.add(new ArrayList<String>());
 		int cursor;
-		for(List<String> sensor : listObjects) {
+		for(List<String> object : listObjects) {
 			cursor = 0;
 			for(List<String> reference : listReferentiels) {
-				if(sensor.get(1).trim().equalsIgnoreCase(reference.get(0))) {
-					if(sensor.get(1).equals("Bracelet RFID") || (!sensor.get(1).equals("Bracelet RFID") 
-							&& sensor.get(7) != null)){
-						sortedCaptors.get(cursor).add(sensor.get(0));
-						continue;
-					}
+				if(object.get(1).trim().equalsIgnoreCase(reference.get(0))) {
+					sortedCaptors.get(cursor).add(object.get(0));
+					continue;
+
 				}
 				cursor++;
 			}
 		}
-		System.out.println("The sensors list was sorted!");
+		System.out.println("The objects list was sorted!");
 		System.out.println("#####################################################\n");
 	}
 
 	private void menu() {
 		System.out.println("##################### Main Menu #####################");
 		System.out.println("Please choose which simulation you want to run : ");
-		System.out.println("1 : Specify the sensors to operate (default choice)");
+		System.out.println("1 : Specify the objects to operate (default choice)");
 		System.out.println("2 : Simulate random alerts");
 		String answer;
 		System.out.print("Your choice : ");
@@ -81,13 +85,13 @@ public class Mocker {
 
 	private void specificAlerts() {
 		System.out.println("############# Launch specific alerts (1) ############");
-		System.out.println("Which type of sensor do you want to operate?");
+		System.out.println("Which type of object do you want to operate?");
 		int i = 1;
-		for(List<String> sensorType : listReferentiels) {
+		for(List<String> objectType : listReferentiels) {
 			if(i==1)
-				System.out.println(i + " : " + sensorType.get(0) + " (" + sortedCaptors.get(i-1).size() +  " sensors) (default choice)");
+				System.out.println(i + " : " + objectType.get(0) + " (" + sortedCaptors.get(i-1).size() +  " objects) (default choice)");
 			else
-				System.out.println(i + " : " + sensorType.get(0) + " (" + sortedCaptors.get(i-1).size() +  " sensors)");
+				System.out.println(i + " : " + objectType.get(0) + " (" + sortedCaptors.get(i-1).size() +  " objects)");
 			i++;
 		}
 		String rawAnswer;
@@ -110,19 +114,19 @@ public class Mocker {
 		launchAlert(listReferentiels.get(answer-1).get(0), sortedCaptors.get(answer-1));
 	}
 
-	private void launchAlert(String sensorType, List<String> listSensors) {
-		final Integer maxNumberSensorsDisplayed = 15;
+	private void launchAlert(String objectType, List<String> listobjects) {
+		final Integer maxNumberobjectsDisplayed = 15;
 		System.out.println("############# Launch specific alerts (2) ############");
-		System.out.println("With which sensor do you want to launch an alert?");
-		System.out.println("(only the first " + maxNumberSensorsDisplayed + " sensors are displayed)");
+		System.out.println("With which object do you want to launch an alert?");
+		System.out.println("(only the first " + maxNumberobjectsDisplayed + " objects are displayed)");
 		int i = 1;
-		for(String sensor : listSensors) {
-			if(i>maxNumberSensorsDisplayed)
+		for(String object : listobjects) {
+			if(i>maxNumberobjectsDisplayed)
 				break;
 			if(i==1)
-				System.out.println(i++ + " : " + sensorType + " n°" + sensor +  " (default choice)");
+				System.out.println(i++ + " : " + objectType + " n°" + object +  " (default choice)");
 			else
-				System.out.println(i++ + " : " + sensorType + " n°" + sensor);
+				System.out.println(i++ + " : " + objectType + " n°" + object);
 		}
 		String rawAnswer;
 		int answer=0;
@@ -137,15 +141,15 @@ public class Mocker {
 			}catch(NumberFormatException e) {
 				answer=0;
 			}
-			if(!(0<answer && answer<=maxNumberSensorsDisplayed && answer<=listSensors.size()))
+			if(!(0<answer && answer<=maxNumberobjectsDisplayed && answer<=listobjects.size()))
 				System.out.print("Invalid! Try again : ");
-		}while(!(0<answer && answer<=maxNumberSensorsDisplayed && answer<=listSensors.size()));
+		}while(!(0<answer && answer<=maxNumberobjectsDisplayed && answer<=listobjects.size()));
 		CategoryObject category = null;
-		if(sensorType.trim().equals("Capteur de fumée"))
+		if(objectType.trim().equals("Capteur de fumée"))
 			category = new CategorySmoke();
-		if(sensorType.trim().equals("Capteur de présence"))
+		if(objectType.trim().equals("Capteur de présence"))
 			category = new CategoryTemperature();
-		Integer id = Integer.parseInt(listSensors.get(answer-1));
+		Integer id = Integer.parseInt(listobjects.get(answer-1));
 		category.launchAlert(id);
 		System.out.println("An alert was launched!");
 		System.out.println("#####################################################\n");

@@ -11,28 +11,35 @@ import common.Message;
 public class CacheReport {
 
 
-	private static Map<Integer, List<Object>> cacheReports;
+	private static Map<Integer, List<Message>> cacheReports;
 	private static Map<String, List<Object>> cacheTypes;
 	
 	public CacheReport() {
-		//TODO init the cache with the value contained in the DB
-		cacheReports = new ConcurrentHashMap<Integer, List<Object>>();
+		//TODO init the cache with the value contained in the DB?
+		cacheReports = new ConcurrentHashMap<Integer, List<Message>>();
 		cacheTypes = new ConcurrentHashMap<String, List<Object>>();
 	}
 	
-	public void addReport(Integer id, Object report) {
+	public void addReport(Integer id, Message report) {
 		if(cacheReports.containsKey(id)) {
 			cacheReports.get(id).add(report);
+			if(cacheReports.get(id).size()>5) {	//we maintain the historic to 5 reports to avoid performance issues
+				cacheReports.get(id).remove(0);
+			}
 		}
 		else {
-			cacheReports.put(id, new ArrayList<Object>());
+			cacheReports.put(id, new ArrayList<Message>());
 			cacheReports.get(id).add(report);
 			// We also update the referential
 		}
 	}
 	
-	public List<Object> getReports(Integer id) {
+	public List<Message> getReports(Integer id) {
 		return cacheReports.get(id);
+	}
+	
+	public Message getLastReport(Integer id) {
+		return cacheReports.get(id).get(cacheReports.get(id).size()-1);
 	}
 	
 	

@@ -42,7 +42,7 @@ public class JDBCConnectionPool {
 				try {
 					connection.close(); // if a problem occurs, the connection is removed
 					listConnections.remove(connection);
-				} catch ( SQLException ignore ) {}
+				} catch (SQLException ignore ) {}
 			return false;
 
 		}

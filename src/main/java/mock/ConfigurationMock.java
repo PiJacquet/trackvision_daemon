@@ -14,6 +14,8 @@ public class ConfigurationMock {
 	public static Integer server_port;
 	public static Integer heart_Rate_freq_send;
 	public static Integer sugarLevel_freq_send;
+	public static Integer posX_freq_send;
+	public static Integer posY_freq_send;
 	public ConfigurationMock() {
 		
 		Properties properties=new Properties();
@@ -24,6 +26,8 @@ public class ConfigurationMock {
 			server_port = Integer.parseInt(properties.getProperty("client_port"));
 			heart_Rate_freq_send= Integer.parseInt(properties.getProperty("heart_Rate_freq_send"));
 			sugarLevel_freq_send= Integer.parseInt(properties.getProperty("sugarLevel_freq_send"));
+			posX_freq_send = Integer.parseInt(properties.getProperty("posX_freq_send"));
+			posY_freq_send = Integer.parseInt(properties.getProperty("posY_freq_send"));
 		} catch (Exception e) {
 			System.out.println("#Error while loading the config file : " + e.getMessage());
 		}

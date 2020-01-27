@@ -113,6 +113,8 @@ public class RequestHandler implements Runnable{
 			return ToolSerialize.messageToJSON((Message)new MsgListResult(getListReferentiels()));
 		case LISTOBJECTS: 
 			return ToolSerialize.messageToJSON((Message)new MsgListResult(getListObjects()));
+		case REPORTPOSITION: 
+			return ToolSerialize.messageToJSON((Message)new MsgListResult(getListObjects()));
 		default:
 			System.out.println("#Error : RequestHandler : Unknow request " + input.getType());
 		}

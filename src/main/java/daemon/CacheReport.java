@@ -1,6 +1,6 @@
 package daemon;
 
-
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,17 +10,22 @@ import common.Message;
 
 public class CacheReport {
 
-
-	private static Map<Integer, List<Message>> cacheReports;
-	private static Map<String, List<Object>> cacheTypes;
+	private Timestamp launchDate;
+	private Map<Integer, List<Message>> cacheReports;
+	private Map<String, List<Object>> cacheTypes;
 	
 	public CacheReport() {
-		//TODO init the cache with the value contained in the DB?
+		// We keep the launch hour for inactivity detective (it impacts the latest received messages)
+		launchDate = new Timestamp(System.currentTimeMillis());
 		cacheReports = new ConcurrentHashMap<Integer, List<Message>>();
 		cacheTypes = new ConcurrentHashMap<String, List<Object>>();
 	}
 	
 	public void addReport(Integer id, Message report) {
+		
+		if(report.getTime()==null)
+			report.setTime(new Timestamp(System.currentTimeMillis()));
+		
 		if(cacheReports.containsKey(id)) {
 			cacheReports.get(id).add(report);
 			if(cacheReports.get(id).size()>5) {	//we maintain the historic to 5 reports to avoid performance issues
@@ -39,9 +44,20 @@ public class CacheReport {
 	}
 	
 	public Message getLastReport(Integer id) {
-		return cacheReports.get(id).get(cacheReports.get(id).size()-1);
+		if(cacheReports.get(id)!=null)
+			return cacheReports.get(id).get(cacheReports.get(id).size()-1);
+		else
+			return null;
 	}
-	
+
+	public Timestamp getLaunchDate() {
+		return launchDate;
+	}
+
+	//For JUnit Test ONLY
+	public void setLaunchDate(Timestamp launchDate) {
+		this.launchDate = launchDate;
+	}
 	
 }
 

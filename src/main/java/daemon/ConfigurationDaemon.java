@@ -35,6 +35,7 @@ public class ConfigurationDaemon {
 		
 		cache = new CacheReport();
 		connectionPool = new JDBCConnectionPool();
+		new Thread(connectionPool).start();
 	}
 
 }

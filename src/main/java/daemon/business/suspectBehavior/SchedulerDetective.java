@@ -14,7 +14,7 @@ public class SchedulerDetective implements Runnable {
 			try {
 				Thread.sleep(frequenceScheduler);
 				inactivityDetective.refreshListObjects();
-				inactivityDetective.investiguate();
+				inactivityDetective.investiguateAll();
 			}catch(InterruptedException e) {
 				break;
 			}

@@ -10,6 +10,7 @@ public class ConnectedObject {
 	private Boolean state;
 	private Integer apartmentId;
 	private String macAddress;
+	private String nickname;
 	private Integer watchMinutesOn;
 	private Integer watchMinutesOff;
 	
@@ -19,8 +20,9 @@ public class ConnectedObject {
 		state = result.getBoolean(3);
 		apartmentId = result.getInt(4);
 		macAddress = result.getString(5);
-		watchMinutesOn=result.getInt(6);
-		watchMinutesOff=result.getInt(7);
+		nickname = result.getString(6);
+		watchMinutesOn=result.getInt(7);
+		watchMinutesOff=result.getInt(8);
 	}
 	
 	public ConnectedObject(Integer id, String type, Boolean state, Integer apartmentId, String macAddress,
@@ -46,7 +48,7 @@ public class ConnectedObject {
 	}
 	
 	public String getInactivityMessage() {
-		return "For the current state "+ (state? "(ON)" : "(OFF)") + " the inactivity  is greater than the value" +
-				"permited (" + (state? watchMinutesOn : watchMinutesOff) +") minutes";
+		return "Inactivity exceed (state "+ (state? "ON" : "OFF") + " : " + (state? watchMinutesOn : watchMinutesOff)
+				+ "mn) : ";
 	}
 }

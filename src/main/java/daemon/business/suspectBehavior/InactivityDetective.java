@@ -32,7 +32,7 @@ public class InactivityDetective{
 	public Integer investiguateAll() throws IOException {
 		Integer numberOfAlert = 0;
 		for(ConnectedObject object : listObjects) {
-			if(isActive(object, true))
+			if(!isActive(object, true))
 				numberOfAlert++;
 		}
 		return numberOfAlert;
@@ -41,19 +41,21 @@ public class InactivityDetective{
 
 	public boolean isActive(ConnectedObject object, Boolean launchAlert) throws IOException {
 		Timestamp lastTime;
-		if(cache.getLastReport(object.getId())==null && cache.getLaunchDate().before(Date.from(Instant.now().minus(Duration.ofMinutes(object.getWatchTime()))))) {
+		if(cache.getLastReport(object.getId())==null) {
 			//if the object was never seen and the cache is launched for a greater amount of time than the tolerated one the db : we launch an alert
-			//To consider the cache launch time avoid to launch inactivity alerts at the beginning of live of the cache
-			if(launchAlert)
-				addMalfunction(object.getId(), "The object was never seen");
-			return false;
+			//To avoid to launch inactivity alerts at the life beginning of the cache, we control its launch time
+			if(cache.getLaunchDate().before(Date.from(Instant.now().minus(Duration.ofMinutes(object.getWatchTime()))))) {
+				if(launchAlert)
+					addMalfunction(object.getId(), object.getInactivityMessage() + Duration.between(cache.getLaunchDate().toInstant(), Instant.now())); //TODO ToString duration
+				return false;
+			}
 		}
 		else {
 			lastTime = cache.getLastReport(object.getId()).getTime();
 			if(lastTime.before(Date.from(Instant.now().minus(Duration.ofMinutes(object.getWatchTime()))))){
 				// If the object was last seen for a greater amount of time that the specified on DB, we raise an alert
 				if(launchAlert)
-					addMalfunction(object.getId(), object.getInactivityMessage() + " : "  + Duration.between(lastTime.toInstant(), Instant.now()));
+					addMalfunction(object.getId(), object.getInactivityMessage()  + Duration.between(lastTime.toInstant(), Instant.now()));
 				return false;
 			}
 		}
@@ -80,6 +82,7 @@ public class InactivityDetective{
 	}
 
 	private void addMalfunction(Integer id, String message) throws IOException {
+		System.out.println("DB : launch");
 		Connection connection = ConfigurationDaemon.connectionPool.getConnection();
 		try {
 			// First, we check if an alert was not already launched for this inactivity
@@ -87,9 +90,11 @@ public class InactivityDetective{
 			stmt.setInt(1, id);
 			ResultSet result = stmt.executeQuery();
 			result.next();
+			System.out.println("DB : number of alerts in base :" + result.getInt(1));
 			if(result.getInt(1)==0) {
+				System.out.println("DB : Insert!");
 				// We insert the alert if there is none previous one active
-				stmt = connection.prepareStatement("INSERT INTO Malfunctions(State_Malfunction, Date_Malfunction,Message_Malfunction,ID_Object) values(1,NOW(),?,?);");
+				stmt = connection.prepareStatement("INSERT INTO Malfunctions(State_Malfunction, Date_Malfunction,Message_Malfunction,ID_Object,Type_Malfunction) values(1,NOW(),?,?,1);");
 				stmt.setString(1, message);
 				stmt.setInt(2, id);
 				stmt.executeUpdate();

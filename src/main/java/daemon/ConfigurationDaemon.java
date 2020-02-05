@@ -16,6 +16,10 @@ public class ConfigurationDaemon {
 	public static String db_user;
 	public static String db_pwd;
 	public static Integer server_port;
+	
+	public static Integer inactivityscheduler;
+	public static Integer cacheSize;
+	
 	public static CacheReport cache;
 	
 	public ConfigurationDaemon() {
@@ -29,11 +33,14 @@ public class ConfigurationDaemon {
 			db_name = properties.getProperty("db_name");
 			db_user = properties.getProperty("db_user");
 			db_pwd = properties.getProperty("db_pwd");
+			inactivityscheduler = Integer.parseInt(properties.getProperty("inactivityscheduler"));
+			cacheSize = Integer.parseInt(properties.getProperty("cachesize"));
 		} catch (Exception e) {
+			System.out.println();
 			System.out.println("#Error while loading the config file : " + e.getMessage());
 		}
 		
-		cache = new CacheReport();
+		cache = new CacheReport(cacheSize);
 		connectionPool = new JDBCConnectionPool();
 		new Thread(connectionPool).start();
 	}

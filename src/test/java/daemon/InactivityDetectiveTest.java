@@ -19,11 +19,12 @@ public class InactivityDetectiveTest {
 
 	private InactivityDetective inactivityDetective;
 	private List<ConnectedObject> listObjects;
+	private CacheReport report;
 
 	@Before
 	public void init() {
 
-		CacheReport report = new CacheReport();
+		report = new CacheReport(5);
 		listObjects = new ArrayList<ConnectedObject>();
 		List<Message> msgs = new ArrayList<Message>();
 
@@ -33,6 +34,7 @@ public class InactivityDetectiveTest {
 		listObjects.add(new ConnectedObject(3, "", true, 1, "", 5, 10));
 		listObjects.add(new ConnectedObject(4, "", false, 1, "", 5, 10));
 		listObjects.add(new ConnectedObject(5, "", true, 1, "", 5, 10));
+		listObjects.add(new ConnectedObject(6, "", false, 1, "", 5, 10));
 
 		// Construct the reports
 		msgs.add(new Message(null));
@@ -69,10 +71,20 @@ public class InactivityDetectiveTest {
 		assertFalse(inactivityDetective.isActive(listObjects.get(2), false));
 		// The object is inactive and was not seen in its intervalle.
 		assertFalse(inactivityDetective.isActive(listObjects.get(3), false));
-		
-		// The object was never seen
+
+		// The object was never seen and the cache was just launch
+		report.setLaunchDate(new Timestamp(System.currentTimeMillis()-1*60*1000));
+		assertTrue(inactivityDetective.isActive(listObjects.get(4), false));
+
+		// The object was never seen and the cache was launch for upper than the tolerate value of the object
+		// (with the state on)
+		report.setLaunchDate(new Timestamp(System.currentTimeMillis()-6*60*1000));
 		assertFalse(inactivityDetective.isActive(listObjects.get(4), false));
 
+		// The object was never seen and the cache was launch for upper than the tolerate value of the object
+		// (with the state off)
+		report.setLaunchDate(new Timestamp(System.currentTimeMillis()-11*60*1000));
+		assertFalse(inactivityDetective.isActive(listObjects.get(5), false));
 	}
 
 }

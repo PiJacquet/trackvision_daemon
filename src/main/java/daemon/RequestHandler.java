@@ -109,6 +109,7 @@ public class RequestHandler implements Runnable{
 		case REPORTTEMPERATURE:
 			ConfigurationDaemon.cache.addReport(((MsgReportTemperature)input).getId(), input);
 			break;
+			
 		case LISTREFERENTIELS:
 			return ToolSerialize.messageToJSON((Message)new MsgListResult(getListReferentiels()));
 		case LISTOBJECTS: 

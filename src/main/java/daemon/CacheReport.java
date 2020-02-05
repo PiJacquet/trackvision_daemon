@@ -12,13 +12,15 @@ public class CacheReport {
 
 	private Timestamp launchDate;
 	private Map<Integer, List<Message>> cacheReports;
-	private Map<String, List<Object>> cacheTypes;
+	private Map<String, List<Object>> cacheTypes; //TODO
+	private Integer cacheSize;
 	
-	public CacheReport() {
+	public CacheReport(Integer cacheSize) {
 		// We keep the launch hour for inactivity detective (it impacts the latest received messages)
 		launchDate = new Timestamp(System.currentTimeMillis());
 		cacheReports = new ConcurrentHashMap<Integer, List<Message>>();
 		cacheTypes = new ConcurrentHashMap<String, List<Object>>();
+		this.cacheSize=cacheSize;
 	}
 	
 	public void addReport(Integer id, Message report) {
@@ -28,7 +30,7 @@ public class CacheReport {
 		
 		if(cacheReports.containsKey(id)) {
 			cacheReports.get(id).add(report);
-			if(cacheReports.get(id).size()>5) {	//we maintain the historic to 5 reports to avoid performance issues
+			if(cacheReports.get(id).size()>cacheSize) {	//we maintain the historic to X reports to avoid performance issues
 				cacheReports.get(id).remove(0);
 			}
 		}

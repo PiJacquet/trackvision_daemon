@@ -6,20 +6,25 @@ import daemon.ConfigurationDaemon;
 
 public class SchedulerDetective implements Runnable {
 	
-	final protected static Integer frequenceScheduler = 15*60;
+	private Integer frequenceScheduler;
+	
+	public SchedulerDetective(Integer frequenceScheduler) {
+		this.frequenceScheduler=frequenceScheduler*1000;
+	}
 
 	public void run() { 
 		InactivityDetective inactivityDetective = new InactivityDetective(ConfigurationDaemon.cache);
 		while(true) {
 			try {
 				Thread.sleep(frequenceScheduler);
+				System.out.println("launching a test");
 				inactivityDetective.refreshListObjects();
-				inactivityDetective.investiguateAll();
+				System.out.println("Number of problems :" + inactivityDetective.investiguateAll());
 			}catch(InterruptedException e) {
 				break;
 			}
 			catch(IOException e) {
-				System.out.println(e.getMessage());
+				System.out.println("Scheduler Detective : " + e.getMessage());
 				break;
 			}
 		}

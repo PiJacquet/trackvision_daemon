@@ -15,7 +15,7 @@ public class DeamonLaunch {
 		new ConfigurationDaemon();
 		final ServerSocket serverSocket = new ServerSocket(ConfigurationDaemon.server_port);
 		
-		new Thread(new SchedulerDetective()).start();
+		new Thread(new SchedulerDetective(ConfigurationDaemon.inactivityscheduler)).start();
 		
 		// Define the closing process of the server application (by closing the port and avoiding any blocked port issue at the next launch)
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
